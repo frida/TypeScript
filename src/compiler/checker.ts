@@ -34643,9 +34643,10 @@ namespace ts {
         }
 
         /**
-         * Determines whether a type has a callable `then` member.
+         * Determines whether a type is an object with a callable `then` member.
          */
         function isThenableType(type: Type): boolean {
+            if (!isTypeAssignableToKind(type, TypeFlags.NonPrimitive)) return false;
             const thenFunction = getTypeOfPropertyOfType(type, "then" as __String);
             return !!thenFunction && getSignaturesOfType(getTypeWithFacts(thenFunction, TypeFacts.NEUndefinedOrNull), SignatureKind.Call).length > 0;
         }
@@ -34674,6 +34675,14 @@ namespace ts {
         }
 
         function createAwaitedTypeIfNeeded(type: Type): Type {
+            // We wrap type `T` in `Awaited<T>` based on the following conditions:
+            // - `T` is not already an `Awaited<U>`, and
+            // - `T` is generic, and
+            // - One of the following applies:
+            //   - `T` has no base constraint, or
+            //   - The base constraint of `T` is `any`, `unknown`, `object`, or `{}`, or
+            //   - The base constraint of `T` is an object type with a callable `then` method.
+
             if (isTypeAny(type)) {
                 return type;
             }
@@ -34685,12 +34694,17 @@ namespace ts {
 
             // Only instantiate `Awaited<T>` if `T` contains possibly non-primitive types.
             if (isGenericObjectType(type) && !allTypesAssignableToKind(type, TypeFlags.Primitive | TypeFlags.Never)) {
-                // Nothing to do if `Awaited<T>` doesn't exist
-                const awaitedSymbol = getGlobalAwaitedSymbol(/*reportErrors*/ true);
-                if (awaitedSymbol) {
-                    // Unwrap unions that may contain `Awaited<T>`, otherwise its possible to manufacture an `Awaited<Awaited<T> | U>` where
-                    // an `Awaited<T | U>` would suffice.
-                    return getTypeAliasInstantiation(awaitedSymbol, [unwrapAwaitedType(type)]);
+                const baseConstraint = getBaseConstraintOfType(type);
+                // Only instantiate `Awaited<T>` if `T` has no base constraint, or the base constraint of `T` is `any`, `unknown`, `{}`, `object`,
+                // or is promise-like.
+                if (!baseConstraint || (baseConstraint.flags & TypeFlags.AnyOrUnknown) || isEmptyObjectType(baseConstraint) || isThenableType(baseConstraint)) {
+                    // Nothing to do if `Awaited<T>` doesn't exist
+                    const awaitedSymbol = getGlobalAwaitedSymbol(/*reportErrors*/ true);
+                    if (awaitedSymbol) {
+                        // Unwrap unions that may contain `Awaited<T>`, otherwise its possible to manufacture an `Awaited<Awaited<T> | U>` where
+                        // an `Awaited<T | U>` would suffice.
+                        return getTypeAliasInstantiation(awaitedSymbol, [unwrapAwaitedType(type)]);
+                    }
                 }
             }
 
