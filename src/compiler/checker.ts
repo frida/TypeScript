@@ -27146,7 +27146,7 @@ namespace ts {
                 case AssignmentDeclarationKind.ExportsProperty:
                 case AssignmentDeclarationKind.Prototype:
                 case AssignmentDeclarationKind.PrototypeProperty:
-                case AssignmentDeclarationKind.ModuleExports:
+                case AssignmentDeclarationKind.ModuleExports: {
                     let valueDeclaration: Declaration | undefined;
                     if (kind !== AssignmentDeclarationKind.ModuleExports) {
                         valueDeclaration = binaryExpression.left.symbol?.valueDeclaration;
@@ -27154,6 +27154,7 @@ namespace ts {
                     valueDeclaration ||= binaryExpression.symbol?.valueDeclaration;
                     const annotated = valueDeclaration && getEffectiveTypeAnnotationNode(valueDeclaration);
                     return annotated ? getTypeFromTypeNode(annotated) : undefined;
+                }
                 case AssignmentDeclarationKind.ObjectDefinePropertyValue:
                 case AssignmentDeclarationKind.ObjectDefinePropertyExports:
                 case AssignmentDeclarationKind.ObjectDefinePrototypeProperty:
