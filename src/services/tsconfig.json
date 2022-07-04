@@ -132,8 +132,6 @@
         "services.ts",
         "breakpoints.ts",
         "transform.ts",
-        "shims.ts",
-        "globalThisShim.ts",
-        "exportAsModule.ts"
+        "shims.ts"
     ]
 }
