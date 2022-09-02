@@ -1085,6 +1085,7 @@ class SourceFileObject extends NodeObject<SyntaxKind.SourceFile> implements Sour
     public bindDiagnostics!: DiagnosticWithLocation[];
     public bindSuggestionDiagnostics?: DiagnosticWithLocation[];
 
+    public isPrebound = false;
     public isDeclarationFile!: boolean;
     public isDefaultLib!: boolean;
     public hasNoDefaultLib!: boolean;

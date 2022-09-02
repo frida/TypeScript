@@ -27,6 +27,7 @@ export * from "../parser.js";
 export * from "../commandLineParser.js";
 export * from "../moduleNameResolver.js";
 export * from "../binder.js";
+export * from "../binderPublic";
 export * from "../symbolWalker.js";
 export * from "../checker.js";
 export * from "../visitorPublic.js";
