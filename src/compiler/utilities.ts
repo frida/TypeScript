@@ -9532,7 +9532,7 @@ export function skipTypeChecking(sourceFile: SourceFile, options: CompilerOption
     // If skipLibCheck is enabled, skip reporting errors if file is a declaration file.
     // If skipDefaultLibCheck is enabled, skip reporting errors if file contains a
     // '/// <reference no-default-lib="true"/>' directive.
-    return (options.skipLibCheck && sourceFile.isDeclarationFile ||
+    return sourceFile.isPrebound || (options.skipLibCheck && sourceFile.isDeclarationFile ||
         options.skipDefaultLibCheck && sourceFile.hasNoDefaultLib) ||
         host.isSourceOfProjectReferenceRedirect(sourceFile.fileName);
 }

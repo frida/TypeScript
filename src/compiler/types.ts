@@ -4272,6 +4272,7 @@ export interface SourceFile extends Declaration, LocalsContainer {
     typeReferenceDirectives: readonly FileReference[];
     libReferenceDirectives: readonly FileReference[];
     languageVariant: LanguageVariant;
+    isPrebound: boolean;
     isDeclarationFile: boolean;
 
     // this map is used by transpiler to supply alternative names for dependencies (i.e. in case of bundling)
