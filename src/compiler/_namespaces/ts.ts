@@ -27,6 +27,7 @@ export * from "../parser";
 export * from "../commandLineParser";
 export * from "../moduleNameResolver";
 export * from "../binder";
+export * from "../binderPublic";
 export * from "../symbolWalker";
 export * from "../checker";
 export * from "../visitorPublic";

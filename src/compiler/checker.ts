@@ -46447,6 +46447,9 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
     function initializeTypeChecker() {
         // Bind all source files and propagate errors
         for (const file of host.getSourceFiles()) {
+            if (file.isPrebound) {
+                continue;
+            }
             bindSourceFile(file, compilerOptions);
         }
 
