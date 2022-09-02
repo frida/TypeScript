@@ -690,6 +690,7 @@ namespace ts {
         public bindDiagnostics!: DiagnosticWithLocation[];
         public bindSuggestionDiagnostics?: DiagnosticWithLocation[];
 
+        public isPrebound = false;
         public isDeclarationFile!: boolean;
         public isDefaultLib!: boolean;
         public hasNoDefaultLib!: boolean;

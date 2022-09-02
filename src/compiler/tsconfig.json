@@ -38,6 +38,7 @@
         "commandLineParser.ts",
         "moduleNameResolver.ts",
 
+        "binderPublic.ts",
         "binder.ts",
         "symbolWalker.ts",
         "checker.ts",
