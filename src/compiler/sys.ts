@@ -1459,7 +1459,9 @@ interface DirectoryWatcher extends FileWatcher {
 }
 
 // TODO: GH#18217 this is used as if it's certainly defined in many places.
-export let sys: System = (() => {
+export let sys: System;
+
+function makeSystem(): System {
     // NodeJS detects "\uFEFF" at the start of the string and *replaces* it with the actual
     // byte order mark from the specified encoding. Using any other byte order mark does
     // not actually work.
@@ -1961,21 +1963,24 @@ export let sys: System = (() => {
         patchWriteFileEnsuringDirectory(sys);
     }
     return sys!;
-})();
+}
 
 /** @internal @knipignore */
 export function setSys(s: System): void {
     sys = s;
 }
 
-if (sys && sys.getEnvironmentVariable) {
-    setCustomPollingValues(sys);
-    Debug.setAssertionLevel(
-        /^development$/i.test(sys.getEnvironmentVariable("NODE_ENV"))
-            ? AssertionLevel.Normal
-            : AssertionLevel.None,
-    );
-}
-if (sys && sys.debugMode) {
-    Debug.isDebugging = true;
+if (!process.env.FRIDA_COMPILE) {
+    sys = makeSystem();
+    if (sys && sys.getEnvironmentVariable) {
+        setCustomPollingValues(sys);
+        Debug.setAssertionLevel(
+            /^development$/i.test(sys.getEnvironmentVariable("NODE_ENV"))
+                ? AssertionLevel.Normal
+                : AssertionLevel.None,
+        );
+    }
+    if (sys && sys.debugMode) {
+        Debug.isDebugging = true;
+    }
 }
