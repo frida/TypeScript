@@ -171,7 +171,7 @@ function createBundler(entrypoint, outfile, taskOptions = {}) {
             bundle: true,
             outfile,
             platform: "node",
-            target: ["es2020", "node14.17"],
+            target: "es2020",
             format: "cjs",
             sourcemap: "linked",
             sourcesContent: false,
@@ -186,8 +186,6 @@ function createBundler(entrypoint, outfile, taskOptions = {}) {
             options.format = "iife";
             // Name the variable ts, matching our old big bundle and so we can use the code below.
             options.globalName = "ts";
-            // If we are in a CJS context, export the ts namespace.
-            options.footer = { js: `\nif (typeof module !== "undefined" && module.exports) { module.exports = ts; }` };
 
             // esbuild converts calls to "require" to "__require"; this function
             // calls the real require if it exists, or throws if it does not (rather than
