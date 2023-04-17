@@ -1,13 +1,10 @@
-import {
-    Debug,
-    LogLevel,
-} from "./_namespaces/ts";
 import * as ts from "./_namespaces/ts";
 
 // enable deprecation logging
 declare const console: any;
 if (typeof console !== "undefined") {
-    Debug.loggingHost = {
+    const { LogLevel } = ts;
+    ts.Debug.loggingHost = {
         log(level, s) {
             switch (level) {
                 case LogLevel.Error: return console.error(s);
