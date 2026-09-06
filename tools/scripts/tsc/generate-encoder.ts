@@ -349,7 +349,7 @@ function generateGoEncoder(): string {
     w.push();
     w.write('"fmt"');
     w.write("");
-    w.write('"github.com/microsoft/TypeScript/tsc/internal/ast"');
+    w.write('"github.com/frida/TypeScript/tsc/pkg/ast"');
     w.pop();
     w.write(")");
     w.write("");
@@ -596,7 +596,7 @@ function generateGoDecoder(): string {
     w.push();
     w.write('"fmt"');
     w.write("");
-    w.write('"github.com/microsoft/TypeScript/tsc/internal/ast"');
+    w.write('"github.com/frida/TypeScript/tsc/pkg/ast"');
     w.pop();
     w.write(")");
     w.write("");
@@ -2029,14 +2029,14 @@ export default function main() {
 
     const goEncoder = generateGoEncoder();
     writeAndFormat(
-        path.join(ROOT, "tsc/internal/api/encoder/encoder_generated.go"),
+        path.join(ROOT, "tsc/pkg/api/encoder/encoder_generated.go"),
         goEncoder + "\n",
         "dprint fmt",
     );
 
     const goDecoder = generateGoDecoder();
     writeAndFormat(
-        path.join(ROOT, "tsc/internal/api/encoder/decoder_generated.go"),
+        path.join(ROOT, "tsc/pkg/api/encoder/decoder_generated.go"),
         goDecoder + "\n",
         "dprint fmt",
     );

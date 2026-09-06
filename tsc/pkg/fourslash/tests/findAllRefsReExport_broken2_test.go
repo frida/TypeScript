@@ -1,0 +1,18 @@
+package fourslash_test
+
+import (
+	"testing"
+
+	"github.com/frida/TypeScript/tsc/pkg/fourslash"
+	"github.com/frida/TypeScript/tsc/pkg/testutil"
+)
+
+func TestFindAllRefsReExport_broken2(t *testing.T) {
+	t.Parallel()
+	defer testutil.RecoverAndFail(t, "Panic on fourslash test")
+	const content = `// @Filename: /a.ts
+/*1*/export { /*2*/x } from "nonsense";`
+	f, done := fourslash.NewFourslash(t, nil /*capabilities*/, content)
+	defer done()
+	f.VerifyBaselineFindAllReferences(t, "1", "2")
+}

@@ -1,0 +1,18 @@
+package fourslash_test
+
+import (
+	"testing"
+
+	"github.com/frida/TypeScript/tsc/pkg/fourslash"
+	"github.com/frida/TypeScript/tsc/pkg/testutil"
+)
+
+func TestSignatureHelpSkippedArgs1(t *testing.T) {
+	t.Parallel()
+	defer testutil.RecoverAndFail(t, "Panic on fourslash test")
+	const content = `function fn(a: number, b: number, c: number) {}
+fn(/*1*/, /*2*/, /*3*/, /*4*/, /*5*/);`
+	f, done := fourslash.NewFourslash(t, nil /*capabilities*/, content)
+	defer done()
+	f.VerifyBaselineSignatureHelp(t)
+}

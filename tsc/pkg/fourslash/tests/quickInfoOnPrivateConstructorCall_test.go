@@ -1,0 +1,20 @@
+package fourslash_test
+
+import (
+	"testing"
+
+	"github.com/frida/TypeScript/tsc/pkg/fourslash"
+	"github.com/frida/TypeScript/tsc/pkg/testutil"
+)
+
+func TestQuickInfoOnPrivateConstructorCall(t *testing.T) {
+	t.Parallel()
+	defer testutil.RecoverAndFail(t, "Panic on fourslash test")
+	const content = `class A {
+    private constructor() {}
+}
+var x = new A(/*1*/`
+	f, done := fourslash.NewFourslash(t, nil /*capabilities*/, content)
+	defer done()
+	f.VerifyNoSignatureHelpForMarkers(t, "1")
+}

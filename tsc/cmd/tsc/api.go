@@ -9,9 +9,9 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/microsoft/TypeScript/tsc/internal/api"
-	"github.com/microsoft/TypeScript/tsc/internal/bundled"
-	"github.com/microsoft/TypeScript/tsc/internal/core"
+	"github.com/frida/TypeScript/tsc/pkg/api"
+	"github.com/frida/TypeScript/tsc/pkg/bundled"
+	"github.com/frida/TypeScript/tsc/pkg/core"
 )
 
 type apiFlags struct {

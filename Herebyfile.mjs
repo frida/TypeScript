@@ -243,7 +243,7 @@ const hasGotestsum = memoize(() => {
 
 const builtLocal = "./built/local";
 
-const libsDir = "./tsc/internal/bundled/libs";
+const libsDir = "./tsc/pkg/bundled/libs";
 const libsRegexp = /(?:^|[\\/])internal[\\/]bundled[\\/]libs[\\/]/;
 
 /**
@@ -273,7 +273,7 @@ export const lib = task({
 function getReleaseBuildFlags(versionOverride) {
     let ldflags = "-ldflags=-s -w";
     if (versionOverride) {
-        ldflags += ` -X github.com/microsoft/TypeScript/tsc/internal/core.version=${versionOverride}`;
+        ldflags += ` -X github.com/frida/TypeScript/tsc/pkg/core.version=${versionOverride}`;
     }
     return ["-trimpath", ldflags];
 }
@@ -355,7 +355,7 @@ export const buildWatch = task({
                 await buildTsc({ abortSignal });
             }
         }, {
-            paths: ["tsc/cmd", "tsc/internal"],
+            paths: ["tsc/cmd", "tsc/pkg"],
             ignored: path => /[\\/]testdata[\\/]/.test(path),
         });
     },
@@ -399,37 +399,37 @@ export const generateExtension = task({
 
 /** @type {EnumDef[]} */
 const enumDefs = [
-    { name: "SymbolFlags", goPrefix: "SymbolFlags", goFile: "tsc/internal/ast/symbolflags.go", outDir: "packages/typescript/src/enums" },
-    { name: "CheckFlags", goPrefix: "CheckFlags", goFile: "tsc/internal/ast/checkflags.go", outDir: "packages/typescript/src/enums" },
-    { name: "TypeFlags", goPrefix: "TypeFlags", goFile: "tsc/internal/checker/types.go", outDir: "packages/typescript/src/enums" },
-    { name: "ObjectFlags", goPrefix: "ObjectFlags", goFile: "tsc/internal/checker/types.go", outDir: "packages/typescript/src/enums" },
-    { name: "SignatureFlags", goPrefix: "SignatureFlags", goFile: "tsc/internal/checker/types.go", outDir: "packages/typescript/src/enums" },
-    { name: "SignatureKind", goPrefix: "SignatureKind", goFile: "tsc/internal/checker/types.go", outDir: "packages/typescript/src/enums" },
-    { name: "ElementFlags", goPrefix: "ElementFlags", goFile: "tsc/internal/checker/types.go", outDir: "packages/typescript/src/enums" },
-    { name: "TypePredicateKind", goPrefix: "TypePredicateKind", goFile: "tsc/internal/checker/types.go", outDir: "packages/typescript/src/enums" },
-    { name: "TypeFormatFlags", goPrefix: "TypeFormatFlags", goFile: "tsc/internal/checker/types.go", outDir: "packages/typescript/src/enums" },
-    { name: "DiagnosticCategory", goPrefix: "Category", goFile: "tsc/internal/diagnostics/diagnostics.go", outDir: "packages/typescript/src/enums" },
-    { name: "SyntaxKind", goPrefix: "Kind", goFile: "tsc/internal/ast/kind_generated.go", outDir: "packages/typescript/src/enums" },
-    { name: "NodeFlags", goPrefix: "NodeFlags", goFile: "tsc/internal/ast/nodeflags.go", outDir: "packages/typescript/src/enums" },
-    { name: "OuterExpressionKinds", goPrefix: "OEK", goFile: "tsc/internal/ast/utilities.go", outDir: "packages/typescript/src/enums" },
-    { name: "ModifierFlags", goPrefix: "ModifierFlags", goFile: "tsc/internal/ast/modifierflags.go", outDir: "packages/typescript/src/enums" },
-    { name: "ModuleKind", goPrefix: "ModuleKind", goFile: "tsc/internal/core/compileroptions.go", outDir: "packages/typescript/src/enums" },
-    { name: "ModuleResolutionKind", goPrefix: "ModuleResolutionKind", goFile: "tsc/internal/core/compileroptions.go", outDir: "packages/typescript/src/enums" },
-    { name: "ModuleDetectionKind", goPrefix: "ModuleDetectionKind", goFile: "tsc/internal/core/compileroptions.go", outDir: "packages/typescript/src/enums" },
-    { name: "NewLineKind", goPrefix: "NewLineKind", goFile: "tsc/internal/core/compileroptions.go", outDir: "packages/typescript/src/enums" },
-    { name: "JsxEmit", goPrefix: "JsxEmit", goFile: "tsc/internal/core/compileroptions.go", outDir: "packages/typescript/src/enums" },
-    { name: "ScriptKind", goPrefix: "ScriptKind", goFile: "tsc/internal/core/scriptkind.go", outDir: "packages/typescript/src/enums" },
-    { name: "TokenFlags", goPrefix: "TokenFlags", goFile: "tsc/internal/ast/tokenflags.go", outDir: "packages/typescript/src/enums" },
-    { name: "DiagnosticDirectivePolicy", goPrefix: "MappedDiagnosticDirectivePolicy", goFile: "tsc/internal/ast/ast.go", outDir: "packages/typescript/src/enums" },
-    { name: "SpanMapKind", goPrefix: "Kind", goFile: "tsc/internal/spanmap/spanmap.go", outDir: "packages/typescript/src/enums" },
-    { name: "SpanMapFidelity", goPrefix: "Fidelity", goFile: "tsc/internal/spanmap/spanmap.go", outDir: "packages/typescript/src/enums" },
-    { name: "SpanMapFeature", goPrefix: "Feature", goFile: "tsc/internal/spanmap/spanmap.go", outDir: "packages/typescript/src/enums" },
-    { name: "NodeBuilderFlags", goPrefix: "Flags", goFile: "tsc/internal/nodebuilder/types.go", outDir: "packages/typescript/src/enums" },
-    { name: "CompletionItemKind", goPrefix: "CompletionItemKind", goFile: "tsc/internal/lsp/lsproto/lsp_generated.go", outDir: "packages/typescript/src/enums" },
-    { name: "EmitOnly", goPrefix: "Emit", goFile: "tsc/internal/compiler/emitter.go", outDir: "packages/typescript/src/enums", excludeMembers: ["OnlyBuilderSignature"] },
+    { name: "SymbolFlags", goPrefix: "SymbolFlags", goFile: "tsc/pkg/ast/symbolflags.go", outDir: "packages/typescript/src/enums" },
+    { name: "CheckFlags", goPrefix: "CheckFlags", goFile: "tsc/pkg/ast/checkflags.go", outDir: "packages/typescript/src/enums" },
+    { name: "TypeFlags", goPrefix: "TypeFlags", goFile: "tsc/pkg/checker/types.go", outDir: "packages/typescript/src/enums" },
+    { name: "ObjectFlags", goPrefix: "ObjectFlags", goFile: "tsc/pkg/checker/types.go", outDir: "packages/typescript/src/enums" },
+    { name: "SignatureFlags", goPrefix: "SignatureFlags", goFile: "tsc/pkg/checker/types.go", outDir: "packages/typescript/src/enums" },
+    { name: "SignatureKind", goPrefix: "SignatureKind", goFile: "tsc/pkg/checker/types.go", outDir: "packages/typescript/src/enums" },
+    { name: "ElementFlags", goPrefix: "ElementFlags", goFile: "tsc/pkg/checker/types.go", outDir: "packages/typescript/src/enums" },
+    { name: "TypePredicateKind", goPrefix: "TypePredicateKind", goFile: "tsc/pkg/checker/types.go", outDir: "packages/typescript/src/enums" },
+    { name: "TypeFormatFlags", goPrefix: "TypeFormatFlags", goFile: "tsc/pkg/checker/types.go", outDir: "packages/typescript/src/enums" },
+    { name: "DiagnosticCategory", goPrefix: "Category", goFile: "tsc/pkg/diagnostics/diagnostics.go", outDir: "packages/typescript/src/enums" },
+    { name: "SyntaxKind", goPrefix: "Kind", goFile: "tsc/pkg/ast/kind_generated.go", outDir: "packages/typescript/src/enums" },
+    { name: "NodeFlags", goPrefix: "NodeFlags", goFile: "tsc/pkg/ast/nodeflags.go", outDir: "packages/typescript/src/enums" },
+    { name: "OuterExpressionKinds", goPrefix: "OEK", goFile: "tsc/pkg/ast/utilities.go", outDir: "packages/typescript/src/enums" },
+    { name: "ModifierFlags", goPrefix: "ModifierFlags", goFile: "tsc/pkg/ast/modifierflags.go", outDir: "packages/typescript/src/enums" },
+    { name: "ModuleKind", goPrefix: "ModuleKind", goFile: "tsc/pkg/core/compileroptions.go", outDir: "packages/typescript/src/enums" },
+    { name: "ModuleResolutionKind", goPrefix: "ModuleResolutionKind", goFile: "tsc/pkg/core/compileroptions.go", outDir: "packages/typescript/src/enums" },
+    { name: "ModuleDetectionKind", goPrefix: "ModuleDetectionKind", goFile: "tsc/pkg/core/compileroptions.go", outDir: "packages/typescript/src/enums" },
+    { name: "NewLineKind", goPrefix: "NewLineKind", goFile: "tsc/pkg/core/compileroptions.go", outDir: "packages/typescript/src/enums" },
+    { name: "JsxEmit", goPrefix: "JsxEmit", goFile: "tsc/pkg/core/compileroptions.go", outDir: "packages/typescript/src/enums" },
+    { name: "ScriptKind", goPrefix: "ScriptKind", goFile: "tsc/pkg/core/scriptkind.go", outDir: "packages/typescript/src/enums" },
+    { name: "TokenFlags", goPrefix: "TokenFlags", goFile: "tsc/pkg/ast/tokenflags.go", outDir: "packages/typescript/src/enums" },
+    { name: "DiagnosticDirectivePolicy", goPrefix: "MappedDiagnosticDirectivePolicy", goFile: "tsc/pkg/ast/ast.go", outDir: "packages/typescript/src/enums" },
+    { name: "SpanMapKind", goPrefix: "Kind", goFile: "tsc/pkg/spanmap/spanmap.go", outDir: "packages/typescript/src/enums" },
+    { name: "SpanMapFidelity", goPrefix: "Fidelity", goFile: "tsc/pkg/spanmap/spanmap.go", outDir: "packages/typescript/src/enums" },
+    { name: "SpanMapFeature", goPrefix: "Feature", goFile: "tsc/pkg/spanmap/spanmap.go", outDir: "packages/typescript/src/enums" },
+    { name: "NodeBuilderFlags", goPrefix: "Flags", goFile: "tsc/pkg/nodebuilder/types.go", outDir: "packages/typescript/src/enums" },
+    { name: "CompletionItemKind", goPrefix: "CompletionItemKind", goFile: "tsc/pkg/lsp/lsproto/lsp_generated.go", outDir: "packages/typescript/src/enums" },
+    { name: "EmitOnly", goPrefix: "Emit", goFile: "tsc/pkg/compiler/emitter.go", outDir: "packages/typescript/src/enums", excludeMembers: ["OnlyBuilderSignature"] },
     // String enum: Go stores internal names with a "\xFE" sentinel prefix, but the escaped
     // form sent over the wire uses "__" (see EscapeSymbolName), so map the sentinel accordingly.
-    { name: "InternalSymbolName", goPrefix: "InternalSymbolName", goFile: "tsc/internal/ast/symbol.go", outDir: "packages/typescript/src/enums", stringEnum: true, valueReplacements: { InternalSymbolNamePrefix: "__" } },
+    { name: "InternalSymbolName", goPrefix: "InternalSymbolName", goFile: "tsc/pkg/ast/symbol.go", outDir: "packages/typescript/src/enums", stringEnum: true, valueReplacements: { InternalSymbolNamePrefix: "__" } },
 ];
 
 /**
@@ -746,7 +746,7 @@ function renderEnumTS(def, members) {
     return `${header}export enum ${def.name} {\n${lines.join("\n")}\n}\n`;
 }
 
-const enumValuesGeneratedGoPath = "tsc/internal/api/enum_values_generated.go";
+const enumValuesGeneratedGoPath = "tsc/pkg/api/enum_values_generated.go";
 
 /**
  * @typedef {{
@@ -762,7 +762,7 @@ const enumValuesGeneratedGoPath = "tsc/internal/api/enum_values_generated.go";
  * generated TS values can be checked against Go's own arithmetic rather than trusting that
  * copying operator-by-operator text from Go into JS preserves precedence/semantics.
  *
- * Writes tsc/internal/api/enum_values_generated.go, a standalone program that imports every
+ * Writes tsc/pkg/api/enum_values_generated.go, a standalone program that imports every
  * package referenced by enumDefs and references each member by its original Go identifier
  * (not by re-deriving it from the parsed TS text), so Go itself — not this script — computes
  * the ground-truth value, then prints them as JSON. `internal/api` is used as the host package
@@ -780,7 +780,7 @@ async function computeGoGroundTruth(generatedEnums) {
      */
     function getPackageName(def) {
         const dir = path.dirname(def.goFile);
-        const importPath = `github.com/microsoft/TypeScript/tsc/${dir.replace(/^tsc[\\/]/, "")}`.replace(/\\/g, "/");
+        const importPath = `github.com/frida/TypeScript/tsc/${dir.replace(/^tsc[\\/]/, "")}`.replace(/\\/g, "/");
         let info = packagesByDir.get(dir);
         if (info === undefined) {
             info = { importPath, pkgName: path.basename(dir) };
@@ -971,7 +971,7 @@ export const generateAPI = task({
     name: "generate:api",
     description: "Generates API files from internal/api/proto.go and internal/api/session.go.",
     run: async () => {
-        await run("go", ["-C", "./tools", "run", "./gen-proto", "../tsc/internal/api/proto.go", "../packages/typescript/src/api/proto.generated.ts"]);
+        await run("go", ["-C", "./tools", "run", "./gen-proto", "../tsc/pkg/api/proto.go", "../packages/typescript/src/api/proto.generated.ts"]);
         await run("npx", ["dprint", "fmt", "packages/typescript/src/api/proto.generated.ts"]);
     },
 });
@@ -1400,7 +1400,7 @@ export const checkHerebyfile = task({
 
 const scriptTsconfigs = [
     "./tools/scripts/tsc/tsconfig.json",
-    "./tsc/internal/lsp/lsproto/_generate/tsconfig.json",
+    "./tsc/pkg/lsp/lsproto/_generate/tsconfig.json",
 ];
 
 export const checkScripts = task({
@@ -1659,7 +1659,7 @@ const getVersion = memoize(() => {
         return nativePreviewReleaseVersion;
     }
 
-    const f = fs.readFileSync("./tsc/internal/core/version.go", "utf8");
+    const f = fs.readFileSync("./tsc/pkg/core/version.go", "utf8");
 
     const match = f.match(/var version\s*=\s*"(\d+\.\d+\.\d+)(-[^"]+)?"/);
     if (!match) {

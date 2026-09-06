@@ -1,0 +1,53 @@
+package fourslash_test
+
+import (
+	"testing"
+
+	"github.com/frida/TypeScript/tsc/pkg/fourslash"
+	. "github.com/frida/TypeScript/tsc/pkg/fourslash/tests/util"
+	"github.com/frida/TypeScript/tsc/pkg/ls"
+	"github.com/frida/TypeScript/tsc/pkg/lsp/lsproto"
+	"github.com/frida/TypeScript/tsc/pkg/testutil"
+)
+
+func TestCompletionsWithOptionalPropertiesGenericPartial3(t *testing.T) {
+	t.Parallel()
+	defer testutil.RecoverAndFail(t, "Panic on fourslash test")
+	const content = `// @strict: true
+interface Foo {
+  a: boolean;
+}
+function partialFoo<T extends Partial<Foo>>(x: T, y: T extends { b?: boolean } ? T & { c: true } : T) {
+  return x;
+}
+
+partialFoo({ a: true, b: true }, { /*1*/ });`
+	f, done := fourslash.NewFourslash(t, nil /*capabilities*/, content)
+	defer done()
+	f.VerifyCompletions(t, "1", &fourslash.CompletionsExpectedList{
+		IsIncomplete: false,
+		ItemDefaults: &fourslash.CompletionsExpectedItemDefaults{
+			CommitCharacters: &DefaultCommitCharacters,
+			EditRange:        Ignored,
+		},
+		Items: &fourslash.CompletionsExpectedItems{
+			Includes: []fourslash.CompletionsExpectedItem{
+				&lsproto.CompletionItem{
+					Label:      "a?",
+					InsertText: new("a"),
+					FilterText: new("a"),
+					SortText:   new(string(ls.SortTextOptionalMember)),
+				},
+				&lsproto.CompletionItem{
+					Label:      "b?",
+					InsertText: new("b"),
+					FilterText: new("b"),
+					SortText:   new(string(ls.SortTextOptionalMember)),
+				},
+				&lsproto.CompletionItem{
+					Label: "c",
+				},
+			},
+		},
+	})
+}

@@ -1,0 +1,27 @@
+package fourslash_test
+
+import (
+	"testing"
+
+	"github.com/frida/TypeScript/tsc/pkg/fourslash"
+	"github.com/frida/TypeScript/tsc/pkg/testutil"
+)
+
+func TestQuickInfoAtPropWithAmbientDeclarationInJs(t *testing.T) {
+	t.Parallel()
+	defer testutil.RecoverAndFail(t, "Panic on fourslash test")
+	const content = `// @allowJs: true
+// @filename: /a.js
+class C {
+    constructor() {
+        this.prop = "";
+    }
+    declare prop: string;
+    method() {
+        this.prop.foo/**/
+    }
+}`
+	f, done := fourslash.NewFourslash(t, nil /*capabilities*/, content)
+	defer done()
+	f.VerifyBaselineHover(t)
+}

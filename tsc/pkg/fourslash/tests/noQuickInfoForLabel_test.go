@@ -1,0 +1,22 @@
+package fourslash_test
+
+import (
+	"testing"
+
+	"github.com/frida/TypeScript/tsc/pkg/fourslash"
+	"github.com/frida/TypeScript/tsc/pkg/testutil"
+)
+
+func TestNoQuickInfoForLabel(t *testing.T) {
+	t.Parallel()
+	defer testutil.RecoverAndFail(t, "Panic on fourslash test")
+	const content = `/*1*/label : while(true){
+    break /*2*/label;
+}`
+	f, done := fourslash.NewFourslash(t, nil /*capabilities*/, content)
+	defer done()
+	f.GoToMarker(t, "1")
+	f.VerifyNotQuickInfoExists(t)
+	f.GoToMarker(t, "2")
+	f.VerifyNotQuickInfoExists(t)
+}

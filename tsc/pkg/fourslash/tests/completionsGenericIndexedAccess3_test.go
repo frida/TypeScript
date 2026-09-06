@@ -1,0 +1,69 @@
+package fourslash_test
+
+import (
+	"testing"
+
+	"github.com/frida/TypeScript/tsc/pkg/fourslash"
+	. "github.com/frida/TypeScript/tsc/pkg/fourslash/tests/util"
+	"github.com/frida/TypeScript/tsc/pkg/ls"
+	"github.com/frida/TypeScript/tsc/pkg/lsp/lsproto"
+	"github.com/frida/TypeScript/tsc/pkg/testutil"
+)
+
+func TestCompletionsGenericIndexedAccess3(t *testing.T) {
+	t.Parallel()
+	defer testutil.RecoverAndFail(t, "Panic on fourslash test")
+	const content = `interface CustomElements {
+  'component-one': {
+      foo?: string;
+  },
+  'component-two': {
+      bar?: string;
+  }
+}
+
+interface Options<T extends keyof CustomElements> {
+  props: CustomElements[T];
+}
+
+declare function create<T extends keyof CustomElements>(name: T, options: Options<T>): void;
+
+create('component-one', { props: { /*1*/ } });
+create('component-two', { props: { /*2*/ } });`
+	f, done := fourslash.NewFourslash(t, nil /*capabilities*/, content)
+	defer done()
+	f.VerifyCompletions(t, "1", &fourslash.CompletionsExpectedList{
+		IsIncomplete: false,
+		ItemDefaults: &fourslash.CompletionsExpectedItemDefaults{
+			CommitCharacters: &DefaultCommitCharacters,
+			EditRange:        Ignored,
+		},
+		Items: &fourslash.CompletionsExpectedItems{
+			Exact: []fourslash.CompletionsExpectedItem{
+				&lsproto.CompletionItem{
+					Label:      "foo?",
+					InsertText: new("foo"),
+					FilterText: new("foo"),
+					SortText:   new(string(ls.SortTextOptionalMember)),
+				},
+			},
+		},
+	})
+	f.VerifyCompletions(t, "2", &fourslash.CompletionsExpectedList{
+		IsIncomplete: false,
+		ItemDefaults: &fourslash.CompletionsExpectedItemDefaults{
+			CommitCharacters: &DefaultCommitCharacters,
+			EditRange:        Ignored,
+		},
+		Items: &fourslash.CompletionsExpectedItems{
+			Exact: []fourslash.CompletionsExpectedItem{
+				&lsproto.CompletionItem{
+					Label:      "bar?",
+					InsertText: new("bar"),
+					FilterText: new("bar"),
+					SortText:   new(string(ls.SortTextOptionalMember)),
+				},
+			},
+		},
+	})
+}

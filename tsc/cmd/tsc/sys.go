@@ -8,11 +8,11 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/microsoft/TypeScript/tsc/internal/bundled"
-	"github.com/microsoft/TypeScript/tsc/internal/execute/tsc"
-	"github.com/microsoft/TypeScript/tsc/internal/tspath"
-	"github.com/microsoft/TypeScript/tsc/internal/vfs"
-	"github.com/microsoft/TypeScript/tsc/internal/vfs/osvfs"
+	"github.com/frida/TypeScript/tsc/pkg/bundled"
+	"github.com/frida/TypeScript/tsc/pkg/execute/tsc"
+	"github.com/frida/TypeScript/tsc/pkg/tspath"
+	"github.com/frida/TypeScript/tsc/pkg/vfs"
+	"github.com/frida/TypeScript/tsc/pkg/vfs/osvfs"
 	"golang.org/x/term"
 )
 

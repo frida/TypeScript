@@ -1,0 +1,36 @@
+package fourslash_test
+
+import (
+	"testing"
+
+	"github.com/frida/TypeScript/tsc/pkg/fourslash"
+	. "github.com/frida/TypeScript/tsc/pkg/fourslash/tests/util"
+	"github.com/frida/TypeScript/tsc/pkg/lsp/lsproto"
+	"github.com/frida/TypeScript/tsc/pkg/testutil"
+)
+
+func TestPrototypeProperty(t *testing.T) {
+	t.Parallel()
+	defer testutil.RecoverAndFail(t, "Panic on fourslash test")
+	const content = `class A {}
+A./*1*/prototype;
+A./*2*/`
+	f, done := fourslash.NewFourslash(t, nil /*capabilities*/, content)
+	defer done()
+	f.VerifyQuickInfoAt(t, "1", "(property) A.prototype: A", "")
+	f.VerifyCompletions(t, "2", &fourslash.CompletionsExpectedList{
+		IsIncomplete: false,
+		ItemDefaults: &fourslash.CompletionsExpectedItemDefaults{
+			CommitCharacters: &DefaultCommitCharacters,
+			EditRange:        Ignored,
+		},
+		Items: &fourslash.CompletionsExpectedItems{
+			Includes: []fourslash.CompletionsExpectedItem{
+				&lsproto.CompletionItem{
+					Label:  "prototype",
+					Detail: new("(property) A.prototype: A"),
+				},
+			},
+		},
+	})
+}

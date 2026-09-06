@@ -183,16 +183,16 @@ Fourslash tests validate language server (LSP) features: completions, hover/quic
 
 | Path | Purpose |
 |------|---------|
-| `tsc/internal/fourslash/tests/*.go` | Hand-written tests |
-| `tsc/internal/fourslash/tests/manual/*.go` | Existing migrated tests |
-| `tsc/internal/fourslash/tests/util/` | Shared test constants |
+| `tsc/pkg/fourslash/tests/*.go` | Hand-written tests |
+| `tsc/pkg/fourslash/tests/manual/*.go` | Existing migrated tests |
+| `tsc/pkg/fourslash/tests/util/` | Shared test constants |
 
 New fourslash tests should be hand-written. Do not create or regenerate an
 upstream-generated fourslash suite.
 
 ### 2.2 Writing a New Fourslash Test
 
-Create a Go test file in `tsc/internal/fourslash/tests/`. The file uses the `fourslash_test` package.
+Create a Go test file in `tsc/pkg/fourslash/tests/`. The file uses the `fourslash_test` package.
 
 #### Minimal template
 
@@ -202,8 +202,8 @@ package fourslash_test
 import (
     "testing"
 
-    "github.com/microsoft/TypeScript/tsc/internal/fourslash"
-    "github.com/microsoft/TypeScript/tsc/internal/testutil"
+    "github.com/frida/TypeScript/tsc/pkg/fourslash"
+    "github.com/frida/TypeScript/tsc/pkg/testutil"
 )
 
 func TestMyFeature(t *testing.T) {
@@ -356,7 +356,7 @@ f.VerifyCompletions(t, "marker", &fourslash.CompletionsExpectedList{
 
 Import the test utilities for shared constants:
 ```go
-import . "github.com/microsoft/TypeScript/tsc/internal/fourslash/tests/util"
+import . "github.com/frida/TypeScript/tsc/pkg/fourslash/tests/util"
 // Provides: DefaultCommitCharacters, Ignored, CompletionGlobalThisItem, etc.
 ```
 
@@ -462,7 +462,7 @@ npx hereby baseline-accept
 4. Accept (only after `hereby test`): `npx hereby baseline-accept`
 
 #### Adding a new fourslash test
-1. Create `tsc/internal/fourslash/tests/myTest_test.go` with the test function
+1. Create `tsc/pkg/fourslash/tests/myTest_test.go` with the test function
 2. Run all tests: `npx hereby test`
 3. Review any generated baselines: `git diff --diff-filter=AM --no-index ./tsc/testdata/baselines/reference ./tsc/testdata/baselines/local`
 4. Accept (only after `hereby test`): `npx hereby baseline-accept`

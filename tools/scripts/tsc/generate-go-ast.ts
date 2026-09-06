@@ -128,7 +128,7 @@ function generateHeader(w: CodeWriter) {
     w.push();
     w.write('"sync/atomic"');
     w.write("");
-    w.write('"github.com/microsoft/TypeScript/tsc/internal/core"');
+    w.write('"github.com/frida/TypeScript/tsc/pkg/core"');
     w.pop();
     w.write(")");
     w.write("");
@@ -1095,11 +1095,11 @@ export default function main() {
     console.log("Generating Go AST code...");
 
     const code = generate();
-    const outPath = path.join(ROOT, "tsc/internal/ast/ast_generated.go");
+    const outPath = path.join(ROOT, "tsc/pkg/ast/ast_generated.go");
     writeAndFormat(outPath, code + "\n");
 
     const kindCode = generateKind();
-    const kindOutPath = path.join(ROOT, "tsc/internal/ast/kind_generated.go");
+    const kindOutPath = path.join(ROOT, "tsc/pkg/ast/kind_generated.go");
     writeAndFormat(kindOutPath, kindCode + "\n");
 }
 

@@ -1,12 +1,12 @@
 This repository contains the native TypeScript compiler and language server.
 The source directories of interest that we have are:
 
-- `tsc/internal` - Contains the compiler and language server code.
+- `tsc/pkg` - Contains the compiler and language server code.
 - `packages/vscode-typescript` - Contains the VS Code extension.
 - `packages/typescript` - Contains the JavaScript API and npm package sources.
 - `tools` - Contains repository tools, generators, and pipelines.
 
-Most compiler development takes place in `tsc/internal`, and most behaviors can be tested via compiler tests.
+Most compiler development takes place in `tsc/pkg`, and most behaviors can be tested via compiler tests.
 
 Most development on the codebase is in Go.
 Standard Go commands and practices apply, but we primarily use a tool called `hereby` to build, run tests, and other tasks.

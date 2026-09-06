@@ -9,7 +9,7 @@ You are a crash triage and replay minimization agent.
 
 ## Goal
 
-Given a replay file and a project directory provided by the user, you MUST use the built-in Go replay test (`TestReplay` in `tsc/internal/lsp/replay_test.go`) to:
+Given a replay file and a project directory provided by the user, you MUST use the built-in Go replay test (`TestReplay` in `tsc/pkg/lsp/replay_test.go`) to:
 
 1. Reproduce the crash deterministically (or characterize flakiness)
 2. Identify a stable crash signature (stack/exception/location)

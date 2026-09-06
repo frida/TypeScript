@@ -1,0 +1,28 @@
+package fourslash_test
+
+import (
+	"testing"
+
+	"github.com/frida/TypeScript/tsc/pkg/fourslash"
+	. "github.com/frida/TypeScript/tsc/pkg/fourslash/tests/util"
+	"github.com/frida/TypeScript/tsc/pkg/testutil"
+)
+
+func TestDocumentHighlightInTypeExport(t *testing.T) {
+	t.Parallel()
+	defer testutil.RecoverAndFail(t, "Panic on fourslash test")
+	const content = `// @Filename: /1.ts
+type [|A|] = 1;
+export { [|A|] as [|B|] };
+// @Filename: /2.ts
+type [|A|] = 1;
+let [|A|]: [|A|] = 1;
+export { [|A|] as [|B|] };
+// @Filename: /3.ts
+type [|A|] = 1;
+let [|A|]: [|A|] = 1;
+export type { [|A|] as [|B|] };`
+	f, done := fourslash.NewFourslash(t, nil /*capabilities*/, content)
+	defer done()
+	f.VerifyBaselineDocumentHighlights(t, nil /*preferences*/, ToAny(f.Ranges())...)
+}

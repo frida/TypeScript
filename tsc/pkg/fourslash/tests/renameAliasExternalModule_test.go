@@ -1,0 +1,22 @@
+package fourslash_test
+
+import (
+	"testing"
+
+	"github.com/frida/TypeScript/tsc/pkg/fourslash"
+	"github.com/frida/TypeScript/tsc/pkg/testutil"
+)
+
+func TestRenameAliasExternalModule(t *testing.T) {
+	t.Parallel()
+	defer testutil.RecoverAndFail(t, "Panic on fourslash test")
+	const content = `// @Filename: a.ts
+namespace SomeModule { export class SomeClass { } }
+export = SomeModule;
+// @Filename: b.ts
+[|import [|{| "contextRangeIndex": 0 |}M|] = require("./a");|]
+import C = [|M|].SomeClass;`
+	f, done := fourslash.NewFourslash(t, nil /*capabilities*/, content)
+	defer done()
+	f.VerifyBaselineRenameAtRangesWithText(t, nil /*preferences*/, "M")
+}

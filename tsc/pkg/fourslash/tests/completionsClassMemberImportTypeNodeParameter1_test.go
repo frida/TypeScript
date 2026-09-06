@@ -1,0 +1,49 @@
+package fourslash_test
+
+import (
+	"testing"
+
+	"github.com/frida/TypeScript/tsc/pkg/core"
+	"github.com/frida/TypeScript/tsc/pkg/fourslash"
+	. "github.com/frida/TypeScript/tsc/pkg/fourslash/tests/util"
+	"github.com/frida/TypeScript/tsc/pkg/ls/lsutil"
+	"github.com/frida/TypeScript/tsc/pkg/lsp/lsproto"
+	"github.com/frida/TypeScript/tsc/pkg/testutil"
+)
+
+func TestCompletionsClassMemberImportTypeNodeParameter1(t *testing.T) {
+	t.Parallel()
+	defer testutil.RecoverAndFail(t, "Panic on fourslash test")
+	const content = `// @module: node18
+// @Filename: /generation.d.ts
+export type GenerationConfigType = { max_length?: number };
+// @FileName: /index.d.ts
+export declare class PreTrainedModel {
+  _get_generation_config(
+    param: import("./generation.js").GenerationConfigType,
+  ): import("./generation.js").GenerationConfigType;
+}
+
+export declare class BlenderbotSmallPreTrainedModel extends PreTrainedModel {
+  /*1*/
+}`
+	f, done := fourslash.NewFourslash(t, nil /*capabilities*/, content)
+	defer done()
+	f.VerifyCompletions(t, "1", &fourslash.CompletionsExpectedList{
+		IsIncomplete: false,
+		ItemDefaults: &fourslash.CompletionsExpectedItemDefaults{
+			CommitCharacters: &[]string{},
+			EditRange:        Ignored,
+		},
+		Items: &fourslash.CompletionsExpectedItems{
+			Includes: []fourslash.CompletionsExpectedItem{
+				&lsproto.CompletionItem{
+					Label:      "_get_generation_config",
+					InsertText: new("_get_generation_config(param: import(\"./generation.js\").GenerationConfigType): import(\"./generation.js\").GenerationConfigType;"),
+					FilterText: new("_get_generation_config"),
+				},
+			},
+		},
+		UserPreferences: &lsutil.UserPreferences{IncludeCompletionsWithClassMemberSnippets: core.TSTrue},
+	})
+}

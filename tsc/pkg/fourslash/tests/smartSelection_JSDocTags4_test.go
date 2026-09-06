@@ -1,0 +1,25 @@
+package fourslash_test
+
+import (
+	"testing"
+
+	"github.com/frida/TypeScript/tsc/pkg/fourslash"
+	"github.com/frida/TypeScript/tsc/pkg/testutil"
+)
+
+func TestSmartSelection_JSDocTags4(t *testing.T) {
+	t.Parallel()
+	defer testutil.RecoverAndFail(t, "Panic on fourslash test")
+	const content = `/**
+ * @typedef {object} Foo
+ * @property {string} a
+ * @property {number} b
+ * @property {/**/number} c
+ */
+
+/** @type {Foo} */
+const foo;`
+	f, done := fourslash.NewFourslash(t, nil /*capabilities*/, content)
+	defer done()
+	f.VerifyBaselineSelectionRanges(t)
+}

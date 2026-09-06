@@ -492,29 +492,29 @@ func (r *typeRenderer) namedType(named *types.Named) string {
 	case r.apiPackagePath + ".DocumentIdentifier":
 		r.documentIdentifier = obj
 		return "DocumentIdentifier"
-	case "github.com/microsoft/TypeScript/tsc/internal/packagejson.JSONValue":
+	case "github.com/frida/TypeScript/tsc/pkg/packagejson.JSONValue":
 		return "unknown"
-	case "github.com/microsoft/TypeScript/tsc/internal/json.Value":
+	case "github.com/frida/TypeScript/tsc/pkg/json.Value":
 		return "unknown"
 	case "github.com/go-json-experiment/json/jsontext.Value": // multiple ways to refer to this type depending on `go` version
 		return "unknown"
 	case "encoding/json/jsontext.Value":
 		return "unknown"
-	case "github.com/microsoft/TypeScript/tsc/internal/core.Tristate":
+	case "github.com/frida/TypeScript/tsc/pkg/core.Tristate":
 		return "boolean"
-	case "github.com/microsoft/TypeScript/tsc/internal/core.JsxEmit":
+	case "github.com/frida/TypeScript/tsc/pkg/core.JsxEmit":
 		return r.importType("JsxEmit", "#enums/jsxEmit")
-	case "github.com/microsoft/TypeScript/tsc/internal/core.ModuleDetectionKind":
+	case "github.com/frida/TypeScript/tsc/pkg/core.ModuleDetectionKind":
 		return r.importType("ModuleDetectionKind", "#enums/moduleDetectionKind")
-	case "github.com/microsoft/TypeScript/tsc/internal/core.ModuleKind":
+	case "github.com/frida/TypeScript/tsc/pkg/core.ModuleKind":
 		return r.importType("ModuleKind", "#enums/moduleKind")
-	case "github.com/microsoft/TypeScript/tsc/internal/core.ModuleResolutionKind":
+	case "github.com/frida/TypeScript/tsc/pkg/core.ModuleResolutionKind":
 		return r.importType("ModuleResolutionKind", "#enums/moduleResolutionKind")
-	case "github.com/microsoft/TypeScript/tsc/internal/core.NewLineKind":
+	case "github.com/frida/TypeScript/tsc/pkg/core.NewLineKind":
 		return r.importType("NewLineKind", "#enums/newLineKind")
-	case "github.com/microsoft/TypeScript/tsc/internal/core.ScriptTarget":
+	case "github.com/frida/TypeScript/tsc/pkg/core.ScriptTarget":
 		return r.importType("ScriptTarget", "#enums/scriptTarget")
-	case "github.com/microsoft/TypeScript/tsc/internal/collections.OrderedMap":
+	case "github.com/frida/TypeScript/tsc/pkg/collections.OrderedMap":
 		if named.TypeArgs().Len() != 2 {
 			return "Record<string, unknown>"
 		}

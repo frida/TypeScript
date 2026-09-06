@@ -39,7 +39,7 @@
     },
     "gofumpt": {
         "langVersion": "go1.26",
-        "modulePath": "github.com/microsoft/TypeScript/tsc"
+        "modulePath": "github.com/frida/TypeScript/tsc"
     },
     "excludes": [
         "**/.git",
@@ -47,13 +47,13 @@
         "**/*-lock.json",
         "**/testdata",
         "packages/vscode-typescript/l10n/**",
-        "tsc/internal/bundled/libs/**",
-        "tsc/internal/lsp/lsproto/_generate/*.json",
-        "tsc/internal/lsp/lsproto/_generate/metaModelSchema.mts",
+        "tsc/pkg/bundled/libs/**",
+        "tsc/pkg/lsp/lsproto/_generate/*.json",
+        "tsc/pkg/lsp/lsproto/_generate/metaModelSchema.mts",
         // Needs to be LF to have a working shebang.
         "packages/typescript/bin/tsc",
-        "tsc/internal/bundled/source/**",
-        "tsc/internal/locale/lcl/**",
+        "tsc/pkg/bundled/source/**",
+        "tsc/pkg/locale/lcl/**",
         "packages/typescript/dist/**",
         "packages/typescript/tsconfig.tsbuildinfo",
         "packages/vscode-typescript/dist/**",

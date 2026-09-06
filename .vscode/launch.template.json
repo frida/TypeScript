@@ -21,7 +21,7 @@
             "type": "go",
             "request": "launch",
             "mode": "test",
-            "program": "${workspaceFolder}/tsc/internal/testrunner",
+            "program": "${workspaceFolder}/tsc/pkg/testrunner",
             "args": ["-test.run", "TestLocal/${fileBasename}"]
         },
         {
@@ -29,7 +29,7 @@
             "type": "go",
             "request": "launch",
             "mode": "test",
-            "program": "${workspaceFolder}/tsc/internal/testrunner",
+            "program": "${workspaceFolder}/tsc/pkg/testrunner",
             "args": [
                 "-test.cpuprofile",
                 "${workspaceFolder}/test.prof",
@@ -42,14 +42,14 @@
             "type": "go",
             "request": "launch",
             "mode": "test",
-            "program": "${workspaceFolder}/tsc/internal/fourslash/gen/${fileBasename}"
+            "program": "${workspaceFolder}/tsc/pkg/fourslash/gen/${fileBasename}"
         },
         {
             "name": "Launch replay test",
             "type": "go",
             "request": "launch",
             "mode": "test",
-            "program": "${workspaceFolder}/tsc/internal/lsp",
+            "program": "${workspaceFolder}/tsc/pkg/lsp",
             "args": [
                 "-test.run",
                 "^TestReplay$",

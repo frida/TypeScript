@@ -1,0 +1,56 @@
+package fourslash_test
+
+import (
+	"testing"
+
+	"github.com/frida/TypeScript/tsc/pkg/fourslash"
+	. "github.com/frida/TypeScript/tsc/pkg/fourslash/tests/util"
+	"github.com/frida/TypeScript/tsc/pkg/ls"
+	"github.com/frida/TypeScript/tsc/pkg/lsp/lsproto"
+	"github.com/frida/TypeScript/tsc/pkg/testutil"
+)
+
+func TestTsxCompletionNonTagLessThan(t *testing.T) {
+	t.Parallel()
+	defer testutil.RecoverAndFail(t, "Panic on fourslash test")
+	const content = `// @lib: es5
+// @Filename: /a.tsx
+var x: Array<numb/*a*/;
+[].map<numb/*b*/;
+1 < Infini/*c*/;`
+	f, done := fourslash.NewFourslash(t, nil /*capabilities*/, content)
+	defer done()
+	f.VerifyCompletions(t, []string{"a", "b"}, &fourslash.CompletionsExpectedList{
+		IsIncomplete: false,
+		ItemDefaults: &fourslash.CompletionsExpectedItemDefaults{
+			CommitCharacters: &DefaultCommitCharacters,
+			EditRange:        Ignored,
+		},
+		Items: &fourslash.CompletionsExpectedItems{
+			Includes: []fourslash.CompletionsExpectedItem{
+				&lsproto.CompletionItem{
+					Label:    "number",
+					SortText: new(string(ls.SortTextGlobalsOrKeywords)),
+				},
+			},
+			Excludes: []string{
+				"SVGNumber",
+			},
+		},
+	})
+	f.VerifyCompletions(t, "c", &fourslash.CompletionsExpectedList{
+		IsIncomplete: false,
+		ItemDefaults: &fourslash.CompletionsExpectedItemDefaults{
+			CommitCharacters: &DefaultCommitCharacters,
+			EditRange:        Ignored,
+		},
+		Items: &fourslash.CompletionsExpectedItems{
+			Includes: []fourslash.CompletionsExpectedItem{
+				&lsproto.CompletionItem{
+					Label:    "Infinity",
+					SortText: new(string(ls.SortTextGlobalsOrKeywords)),
+				},
+			},
+		},
+	})
+}

@@ -1,4 +1,4 @@
-module github.com/microsoft/TypeScript/tsc
+module github.com/frida/TypeScript/tsc
 
 go 1.26
 

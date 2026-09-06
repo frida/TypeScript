@@ -74,9 +74,9 @@ linters:
         main:
           deny:
             - pkg: 'encoding/json$'
-              desc: 'Use "github.com/microsoft/TypeScript/tsc/internal/json" instead.'
+              desc: 'Use "github.com/frida/TypeScript/tsc/pkg/json" instead.'
             - pkg: 'github.com/go-json-experiment/json'
-              desc: 'Use "github.com/microsoft/TypeScript/tsc/internal/json" instead.'
+              desc: 'Use "github.com/frida/TypeScript/tsc/pkg/json" instead.'
 
     forbidigo:
       analyze-types: true

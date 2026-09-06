@@ -1,0 +1,28 @@
+package fourslash_test
+
+import (
+	"testing"
+
+	"github.com/frida/TypeScript/tsc/pkg/fourslash"
+	"github.com/frida/TypeScript/tsc/pkg/testutil"
+)
+
+func TestRenameForDefaultExport07(t *testing.T) {
+	t.Parallel()
+	defer testutil.RecoverAndFail(t, "Panic on fourslash test")
+	const content = `// @Filename: foo.ts
+export default function /**/[|DefaultExportedFunction|]() {
+    return DefaultExportedFunction
+}
+/**
+ *  Commenting DefaultExportedFunction
+ */
+
+var x: typeof DefaultExportedFunction;
+
+var y = DefaultExportedFunction();`
+	f, done := fourslash.NewFourslash(t, nil /*capabilities*/, content)
+	defer done()
+	f.GoToMarker(t, "")
+	f.VerifyRenameSucceeded(t, nil /*preferences*/)
+}

@@ -3,8 +3,8 @@ name: CodeQL Configuration
 paths-ignore:
   - built
   - packages/*/dist
-  - tsc/internal/bundled/libs
-  - tsc/internal/bundled/source
+  - tsc/pkg/bundled/libs
+  - tsc/pkg/bundled/source
   - tsc/testdata
 
 query-filters:

@@ -1,0 +1,61 @@
+package fourslash_test
+
+import (
+	"testing"
+
+	"github.com/frida/TypeScript/tsc/pkg/fourslash"
+	. "github.com/frida/TypeScript/tsc/pkg/fourslash/tests/util"
+	"github.com/frida/TypeScript/tsc/pkg/ls"
+	"github.com/frida/TypeScript/tsc/pkg/lsp/lsproto"
+	"github.com/frida/TypeScript/tsc/pkg/testutil"
+)
+
+func TestCompletionsIndexSignatureConstraint1(t *testing.T) {
+	t.Parallel()
+	defer testutil.RecoverAndFail(t, "Panic on fourslash test")
+	const content = `// @strict: true
+
+repro #9900
+
+interface Test {
+  a?: number;
+  b?: string;
+}
+
+interface TestIndex {
+  [key: string]: Test;
+}
+
+declare function testFunc<T extends TestIndex>(t: T): void;
+
+testFunc({
+  test: {
+    /**/
+  },
+});`
+	f, done := fourslash.NewFourslash(t, nil /*capabilities*/, content)
+	defer done()
+	f.VerifyCompletions(t, "", &fourslash.CompletionsExpectedList{
+		IsIncomplete: false,
+		ItemDefaults: &fourslash.CompletionsExpectedItemDefaults{
+			CommitCharacters: &DefaultCommitCharacters,
+			EditRange:        Ignored,
+		},
+		Items: &fourslash.CompletionsExpectedItems{
+			Exact: []fourslash.CompletionsExpectedItem{
+				&lsproto.CompletionItem{
+					Label:      "a?",
+					InsertText: new("a"),
+					FilterText: new("a"),
+					SortText:   new(string(ls.SortTextOptionalMember)),
+				},
+				&lsproto.CompletionItem{
+					Label:      "b?",
+					InsertText: new("b"),
+					FilterText: new("b"),
+					SortText:   new(string(ls.SortTextOptionalMember)),
+				},
+			},
+		},
+	})
+}
