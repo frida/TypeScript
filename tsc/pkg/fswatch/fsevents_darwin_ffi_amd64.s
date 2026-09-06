@@ -1,4 +1,4 @@
-//go:build darwin && amd64
+//go:build darwin && !ios && amd64
 
 #include "textflag.h"
 
