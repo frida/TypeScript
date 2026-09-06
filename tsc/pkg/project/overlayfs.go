@@ -88,6 +88,10 @@ func newDiskFile(fileName string, content string) *diskFile {
 
 var _ FileHandle = (*diskFile)(nil)
 
+func NewDiskFile(fileName string, content string) FileHandle {
+	return newDiskFile(fileName, content)
+}
+
 func (f *diskFile) Version() int32 {
 	return 0
 }
