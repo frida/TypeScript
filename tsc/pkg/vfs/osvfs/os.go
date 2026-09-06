@@ -61,7 +61,7 @@ var isFileSystemCaseSensitive = func() bool {
 	// but this is largely good enough for our purposes (and what sys.ts used to do with __filename).
 	exe, err := osutil.Executable()
 	if err != nil {
-		panic(fmt.Sprintf("vfs: failed to get executable path: %v", err))
+		return false
 	}
 
 	// If the current executable exists under a different case, we must be case-insensitive.
