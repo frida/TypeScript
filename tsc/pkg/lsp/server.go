@@ -874,7 +874,11 @@ func (s *Server) Run(ctx context.Context) error {
 	})
 	go func() { readLoopErr <- s.readLoop(ctx) }()
 
-	if err := g.Wait(); err != nil && !errors.Is(err, io.EOF) && ctx.Err() != nil {
+	err := g.Wait()
+	if s.session != nil {
+		s.session.Close()
+	}
+	if err != nil && !errors.Is(err, io.EOF) && ctx.Err() != nil {
 		return err
 	}
 	return nil

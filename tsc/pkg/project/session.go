@@ -14,7 +14,6 @@ import (
 	"sync/atomic"
 	"time"
 
-	osmemory "github.com/mackerelio/go-osstat/memory"
 	"github.com/frida/TypeScript/tsc/pkg/ast"
 	"github.com/frida/TypeScript/tsc/pkg/collections"
 	"github.com/frida/TypeScript/tsc/pkg/contentmapper"
@@ -31,6 +30,7 @@ import (
 	"github.com/frida/TypeScript/tsc/pkg/project/logging"
 	"github.com/frida/TypeScript/tsc/pkg/tspath"
 	"github.com/frida/TypeScript/tsc/pkg/vfs"
+	osmemory "github.com/mackerelio/go-osstat/memory"
 )
 
 type UpdateReason int
@@ -135,6 +135,7 @@ type Session struct {
 	snapshot         *Snapshot
 	snapshotMu       sync.RWMutex
 	snapshotUpdateMu sync.Mutex
+	closeOnce        sync.Once
 
 	// scheduledSnapshotUpdateCancel is the cancelation function for a scheduled
 	// snapshot update. Snapshot updates are scheduled and debounced after file closes.
@@ -1671,6 +1672,10 @@ func (s *Session) updateWatches(oldSnapshot *Snapshot, newSnapshot *Snapshot) er
 }
 
 func (s *Session) Close() {
+	s.closeOnce.Do(s.close)
+}
+
+func (s *Session) close() {
 	// Cancel any pending scheduled snapshot update
 	s.cancelScheduledSnapshotUpdate()
 	// Cancel any pending diagnostics refresh
@@ -1683,6 +1688,9 @@ func (s *Session) Close() {
 	s.stopPerformanceTelemetry()
 	s.backgroundQueue.Close()
 	s.SnapshotHost.Close()
+	s.snapshotMu.Lock()
+	s.snapshot.Deref()
+	s.snapshotMu.Unlock()
 }
 
 func (s *Session) flushChanges(ctx context.Context) (FileChangeSummary, map[tspath.Path]*Overlay, map[tspath.Path]*ATAStateChange, *lsutil.UserPreferences) {
