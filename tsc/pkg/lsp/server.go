@@ -1146,7 +1146,7 @@ func (s *Server) handleRequestOrNotification(ctx context.Context, req *lsproto.R
 
 	if handler := handlers()[req.Method]; handler != nil {
 		start := time.Now()
-		doAsyncWork, err := handler(s, ctx, req)
+		doAsyncWork, err := callHandler(handler, s, ctx, req)
 		idStr := ""
 		if req.ID != nil {
 			idStr = " (" + req.ID.String() + ")"
@@ -1168,7 +1168,7 @@ func (s *Server) handleRequestOrNotification(ctx context.Context, req *lsproto.R
 		if doAsyncWork != nil {
 			return func() error {
 				// note: ctx.Err() has to be checked in the async work to allow async handlers to cleanup resources correctly
-				asyncWorkErr := doAsyncWork()
+				asyncWorkErr := callAsyncWork(doAsyncWork)
 				_, isUserFacing := errors.AsType[userFacingRequestFailedError](asyncWorkErr)
 				isRealError := asyncWorkErr != nil && !isUserFacing
 				if isRealError {
@@ -1189,6 +1189,25 @@ func (s *Server) handleRequestOrNotification(ctx context.Context, req *lsproto.R
 		return nil, s.sendError(req.ID, lsproto.ErrorCodeInvalidRequest)
 	}
 	return nil, nil
+}
+
+func callHandler(handler handlerFunc, s *Server, ctx context.Context, req *lsproto.RequestMessage) (work func() error, err error) {
+	defer func() {
+		if recovered := recover(); recovered != nil {
+			work = nil
+			err = fmt.Errorf("%w: %v", lsproto.ErrorCodeInternalError, recovered)
+		}
+	}()
+	return handler(s, ctx, req)
+}
+
+func callAsyncWork(work func() error) (err error) {
+	defer func() {
+		if recovered := recover(); recovered != nil {
+			err = fmt.Errorf("%w: %v", lsproto.ErrorCodeInternalError, recovered)
+		}
+	}()
+	return work()
 }
 
 // contentMapperFallbackResponse returns an empty response for requests made for
@@ -1224,7 +1243,9 @@ func contentMapperFallbackResponse(method lsproto.Method, err error) (any, bool)
 // handlerMap maps LSP method to a handler function. The handler function executes any work that must be done synchronously
 // before other requests/notifications can be processed, and returns any additional work as a function to be executed
 // asynchronously after the synchronous work is complete.
-type handlerMap map[lsproto.Method]func(*Server, context.Context, *lsproto.RequestMessage) (func() error, error)
+type handlerFunc func(*Server, context.Context, *lsproto.RequestMessage) (func() error, error)
+
+type handlerMap map[lsproto.Method]handlerFunc
 
 var handlers = sync.OnceValue(func() handlerMap {
 	handlers := make(handlerMap)
